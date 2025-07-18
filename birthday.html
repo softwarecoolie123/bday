@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Ananya!</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(to bottom right, #ffe6f0, #e0c3fc);
+    }
+    .font-pacifico {
+      font-family: 'Pacifico', cursive;
+    }
+    .hidden-box {
+      display: none;
+    }
+    .cursor-emoji {
+      cursor: url('https://abs.twimg.com/emoji/v2/svg/1f382.svg'), auto;
+    }
+  </style>
+</head>
+<body class="relative overflow-x-hidden cursor-emoji">
+
+  <!-- Welcome Gate -->
+  <div id="gate" class="fixed inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-pink-300 via-fuchsia-300 to-purple-300 z-50">
+    <h1 class="text-5xl md:text-6xl font-pacifico text-white mb-6 animate-bounce">Welcome, Ananya! 🎉</h1>
+    <p class="text-xl text-white mb-4">A surprise is waiting for you...</p>
+    <button onclick="enterSite()" class="px-6 py-3 bg-white text-pink-600 font-bold rounded-full shadow-lg hover:scale-105 transition">Click to Start 🎁</button>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-10"></canvas>
+
+  <!-- Main Content -->
+  <div id="main-content" class="hidden">
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex flex-col items-center justify-center text-center px-4 pt-20">
+      <h1 class="text-5xl md:text-6xl font-pacifico text-fuchsia-700 mb-4">Happy Birthday Ananya! 🎂</h1>
+      <p class="text-xl md:text-2xl text-purple-800 mb-6">Wishing you joy, magic, and memories forever 🌸</p>
+      <button onclick="playVoice()" class="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-6 py-2 rounded-full shadow-md hover:scale-105 transition">Play My Voice Message 🎙️</button>
+    </section>
+
+    <!-- Story Timeline -->
+    <section class="bg-pink-100 py-16 px-4">
+      <h2 class="text-3xl font-pacifico text-center text-fuchsia-700 mb-10">Our Memories Together 📸</h2>
+      <div class="flex flex-col gap-6 md:flex-row justify-center items-center">
+        <img class="w-64 h-64 object-cover rounded-2xl shadow-lg" src="https://picsum.photos/300?1" alt="memory 1">
+        <img class="w-64 h-64 object-cover rounded-2xl shadow-lg" src="https://picsum.photos/300?2" alt="memory 2">
+        <img class="w-64 h-64 object-cover rounded-2xl shadow-lg" src="https://picsum.photos/300?3" alt="memory 3">
+      </div>
+    </section>
+
+    <!-- Love Letter Reveal -->
+    <section class="bg-purple-100 py-16 px-4 text-center">
+      <h2 class="text-3xl font-pacifico text-purple-700 mb-6">A Letter Just for You 💌</h2>
+      <button onclick="toggleLetter()" class="bg-fuchsia-500 text-white px-5 py-2 rounded-full hover:scale-105 transition">Open Letter</button>
+      <div id="letter" class="hidden-box mt-6 max-w-xl mx-auto text-lg text-purple-900 bg-white p-6 rounded-xl shadow-lg">
+        Dear Ananya,<br><br>
+        You're not just amazing — you're unforgettable. Every smile you share makes the world a bit brighter. I hope this little site makes you smile too. You deserve the universe, and I’ll always be cheering for you. ❤️<br><br>
+        With love,<br>Teja
+      </div>
+    </section>
+
+    <!-- Secret Unlock -->
+    <section class="bg-blue-100 py-16 px-4 text-center">
+      <h2 class="text-3xl font-pacifico text-blue-700 mb-6">Want a Surprise? 🗝️</h2>
+      <p class="text-lg mb-4">Type the secret nickname to unlock the gift</p>
+      <input id="codeInput" type="text" placeholder="Enter code..." class="px-4 py-2 rounded shadow text-center"/>
+      <button onclick="checkCode()" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:scale-105 transition">Unlock</button>
+      <div id="giftBox" class="hidden-box mt-6">
+        <div class="animate-bounce text-6xl">🎁</div>
+        <button onclick="revealGift()" class="mt-4 px-6 py-2 bg-gradient-to-r from-pink-400 to-purple-500 text-white rounded-full shadow hover:scale-105">Open Gift</button>
+      </div>
+      <div id="finalGift" class="hidden-box mt-6 text-xl text-fuchsia-700 font-bold">
+        🎉 Surprise! Here's your special video:<br>
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="underline text-purple-700">Click to Watch</a>
+      </div>
+    </section>
+
+    <!-- Closing -->
+    <section class="bg-gradient-to-b from-purple-100 to-pink-200 py-16 text-center">
+      <h2 class="text-2xl font-pacifico text-fuchsia-700 mb-2">With love,</h2>
+      <p class="text-lg text-purple-800">Your friend, fan, and well-wisher forever 🌟</p>
+    </section>
+  </div>
+
+  <!-- Voice Audio -->
+  <audio id="voiceMsg" src="https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav"></audio>
+
+  <!-- Scripts -->
+  <script>
+    function enterSite() {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("main-content").style.display = "block";
+      confettiBurst();
+    }
+
+    function playVoice() {
+      document.getElementById("voiceMsg").play();
+      confettiBurst();
+    }
+
+    function toggleLetter() {
+      const letter = document.getElementById("letter");
+      letter.style.display = letter.style.display === "block" ? "none" : "block";
+    }
+
+    function checkCode() {
+      const input = document.getElementById("codeInput").value.toLowerCase().trim();
+      if (input === "princess") {
+        document.getElementById("giftBox").style.display = "block";
+      } else {
+        alert("Oops! Try another name 💭");
+      }
+    }
+
+    function revealGift() {
+      document.getElementById("finalGift").style.display = "block";
+      confettiBurst();
+    }
+
+    function confettiBurst() {
+      confetti({
+        particleCount: 150,
+        spread: 90,
+        origin: { y: 0.6 }
+      });
+    }
+  </script>
+</body>
+</html>
